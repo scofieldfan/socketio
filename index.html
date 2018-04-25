@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        .chat-message {
+            width: 100%;
+            height: 100%;
+            padding: 20px 0 50px 20px;
+            overflow: auto;
+        }
+
+        .chat-message li {
+            display: list-item;
+            list-style: none;
+        }
+
+        .chat-message .user-name {
+            color: rgb(56, 36, 170);
+            font-weight: 700;
+        }
+
+        .message-box {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            right: 0;
+        }
+
+        .input-message {
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            border: 4px solid #000;
+            padding: 4px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <ul class="chat-message">
+
+        </ul>
+        <form action="" class="message-box">
+            <input id="message" class="input-message">
+        </form>
+    </div>
+    <script src="/socket.io/socket.io.js "></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js "></script>
+    <script>
+        $(function () {
+            var socket = io();
+
+            var name = "游客" + Math.floor(Math.random() * 1000);
+            var CHANNEL = 'chat message';
+            function scrollBottom() {
+                $('.chat-message').scrollTop($('.chat-message')[0].scrollHeight);
+            }
+            function appendMessage(message) {
+                $(".chat-message").append("<li><span class=\"user-name\">" + name + ":</span>" + message + "</li>")
+            }
+            function sendMessage(socket, data) {
+                socket.emit(CHANNEL, data);
+            }
+            function clearInput() {
+                $('#message').val('');
+            }
+            socket.on(CHANNEL, function (data) {
+                appendMessage(data);
+                scrollBottom();
+            });
+            $('form').submit(function () {
+                let data = $('#message').val();
+                sendMessage(socket, data);
+                appendMessage(data);
+                scrollBottom();
+                clearInput();
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>
