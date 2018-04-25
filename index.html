@@ -30,6 +30,8 @@
             height: 100%;
             padding: 20px 0 50px 20px;
             overflow: auto;
+            display: flex;
+            flex-direction: column-reverse;
         }
 
         .chat-message li {
@@ -82,7 +84,7 @@
                 $('.chat-message').scrollTop($('.chat-message')[0].scrollHeight);
             }
             function appendMessage(message) {
-                $(".chat-message").append("<li><span class=\"user-name\">" + name + ":</span>" + message + "</li>")
+                $(".chat-message").prepend("<li><span class=\"user-name\">" + name + ":</span>" + message + "</li>")
             }
             function sendMessage(socket, data) {
                 socket.emit(CHANNEL, data);
